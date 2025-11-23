@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+type QuizItem = {
+    question: string;
+    answer: string;
+};
+
 function App() {
-  const [list, setList] = useState([]);
-  const [current, setCurrent] = useState(null)
+  const [list, setList] = useState<QuizItem[]>([]);
+  const [current, setCurrent] = useState<QuizItem | null>(null)
   const [showAnswer, setShowAnswer] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL
+  const API_URL = import.meta.env.VITE_API_URL as string;
 
   useEffect(() => {
     fetch(API_URL + "/question")
       .then((r) => r.json())
-      .then((json) => {
+      .then((json: QuizItem[]) => {
         setList(json);
         pickNext(json);
       });
   }, []);
 
-  const pickNext = (json = list) => {
+  const pickNext = (json: QuizItem[] = list) => {
     const item = json[Math.floor(Math.random() * json.length)];
     setCurrent(item);
-    setShowAnswer(prev => false);
+    setShowAnswer(_ => false);
   };
 
   if (!current) return <div>読み込み中...</div>;

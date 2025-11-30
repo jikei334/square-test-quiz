@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+.btn {
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  margin-right: 12px;
+  transition: 0.2s;
+}
+
+/* 正解ボタン（緑） */
+.correct {
+  background-color: #4caf50;
+}
+.correct:hover {
+  background-color: #45a049;
+}
+
+/* 不正解ボタン（赤） */
+.wrong {
+  background-color: #f44336;
+}
+.wrong:hover {
+  background-color: #d73528;
+}

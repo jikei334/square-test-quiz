@@ -6,6 +6,7 @@ type QuizItem = {
   Id: number;
   question: string;
   answer: string;
+  page: number;
   num_correct: number;
   num_solved: number;
   num_streak: number;
@@ -24,6 +25,13 @@ function get_quiz_status(quiz: QuizItem): QuizStatus {
   } else {
     return "great";
   }
+}
+
+const backgroundMap = {
+  "unsolved": "linear-gradient(to bottom, #eaf4ff, #d0e7ff)",
+  "bad": "linear-gradient(to bottom, #fff8d6, #ffec99)",
+  "good": "linear-gradient(to bottom, #ffe9d6, #ffb86c)",
+  "great": "linear-gradient(to bottom, #ffe0e7, #ff9da9)",
 }
 
 function shuffle<T>(list: T[]): T[] {
@@ -148,7 +156,7 @@ class WeightedQuestionList extends QuestionList {
         return item;
       } else if (status == "bad") {
         const item = this.bad_question_list[this.bad_question_index];
-        this.good_question_index++;
+        this.bad_question_index++;
         return item;
       } else if (status == "good") {
         const item = this.good_question_list[this.good_question_index];
@@ -284,29 +292,37 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-    <button onClick={() => signOutRedirect()}>Sign out</button>
-    <h1>クイズ</h1>
-    <div>{current.num_correct}/{current.num_solved}(streak: {current.num_streak})</div>
-    <h2>{current.question}</h2>
+    <div style={{
+      padding: 20,
+      whiteSpace: "pre-wrap",
+    }}>
+      <button onClick={() => signOutRedirect()}>Sign out</button>
+      <h1>クイズ</h1>
+      <div style={{
+        background: backgroundMap[get_quiz_status(current)],
+      }}>{current.num_correct}/{current.num_solved}(streak: {current.num_streak})</div>
+      <h2>{current.question}</h2>
 
-    <button onClick={togggleShowAnswer}>
-    {showAnswer ? "答えを隠す" : "答えを見る"}
-    </button>
+      <button onClick={togggleShowAnswer}>
+      {showAnswer ? "答えを隠す" : "答えを見る"}
+      </button>
 
-    <button onClick={() => pickNext()} style={{ marginLeft: 10 }}>
-    次へ
-    </button>
+      <button onClick={() => pickNext()} style={{ marginLeft: 10 }}>
+      次へ
+      </button>
 
-    {showAnswer && (
-      <>
-      <div style={{ marginTop: "10px" }}>
-      {current.answer}
-      </div>
-      <button className="btn correct" onClick={() => pushCorrect()}>正解</button>
-      <button className="btn wrong" onClick={() => pushWrong()}>不正解</button>
-      </>
-    )}
+      {showAnswer && (
+        <>
+        <div style={{ marginTop: "10px" }}>
+        {current.answer}
+        </div>
+        <div style={{ marginTop: "10px" }}>
+          Page: {current.page}
+        </div>
+        <button className="btn correct" onClick={() => pushCorrect()}>正解</button>
+        <button className="btn wrong" onClick={() => pushWrong()}>不正解</button>
+        </>
+      )}
     </div>
   );
 }
